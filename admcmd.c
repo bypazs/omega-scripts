@@ -52,7 +52,15 @@
 		if(verify_admins && !IsPlayerAnAdmin(player)) { GetGame().AdminLog("[ADMCMD] (Unauthorized) " + player.GetIdentity().GetName() +" ("+player.GetIdentity().GetPlainId()+", "+player.GetIdentity().GetId()+") tried to execute "+ chat_params.param3); return; }
 		string message = chat_params.param3, prefix, param0, command;
 		TStringArray tokens = new TStringArray;
+		message.Replace("` ", "&SPCESC!"); //Escape spaces before splitting
 		message.Split(" ", tokens); int count = tokens.Count();
+
+		for ( i = 0; i < count; ++i ) {
+			message = tokens[i];
+			message.Replace("&SPCESC!", " "); //.Replace doesn't work directly on TStringArray elements for some reason :(
+			tokens[i] = message;
+		}
+
 		param0 = tokens.Get(0);
 		param0.ParseStringEx(prefix); if(prefix != cmd_prefix) return;
 		param0.ParseStringEx(command);
@@ -62,6 +70,24 @@
 				if(count != 2) { SendMessageToPlayer(player, "/spawn [object]"); return; }
 				GetGame().CreateObject(tokens[1], player.GetPosition(), false, true );
 				SendMessageToPlayer(player, "[ObjectSpawn] Object spawned: " + tokens[1]);
+				break;
+			}
+
+			case "topos": {
+				if (count < 3) { SendMessageToPlayer(player, "/topos [x] [y] (player)"); return; }
+				float ATL_Z = GetGame().SurfaceY(tokens[1].ToFloat(), tokens[2].ToFloat());
+				vector reqpos = Vector(tokens[1].ToFloat(), ATL_Z, tokens[2].ToFloat());
+				temp_player = player;
+				if (count == 4) { 
+					temp_player = GetPlayer(tokens[3]); 
+					if (temp_player == NULL) {
+						SendMessageToPlayer(player, "[Teleport] Can't find player called: '"+tokens[3]+"'"); return;
+					} else {
+						SendMessageToPlayer(temp_player, "[Teleport] You've been teleported to " + reqpos + " by admin " + player.GetIdentity().GetName());
+					}
+				}
+				temp_player.SetPosition(reqpos);
+				SendMessageToPlayer(player, "[Teleport] Target teleported to " + temp_player.GetPosition());
 				break;
 			}
 
@@ -175,8 +201,11 @@
 
 			case "offroad": {
 				SendMessageToPlayer(player, "[Offroad] Vehicled spawned");
-				EntityAI v;
-				v = GetGame().CreateObject( "OffroadHatchback", player.GetPosition() + "1.5 0 1.5");		    
+				Car v;
+				float playerAngle = MiscGameplayFunctions.GetHeadingAngle(player);
+				vector posModifier = Vector(-(3 * Math.Sin(playerAngle)), 0, 3 * Math.Cos(playerAngle));
+				v = Car.Cast(GetGame().CreateObject( "OffroadHatchback", player.GetPosition() + posModifier));
+				
 				v.GetInventory().CreateAttachment("SparkPlug");
 				v.GetInventory().CreateAttachment("EngineBelt");
 				v.GetInventory().CreateAttachment("CarBattery");
@@ -216,7 +245,7 @@
 				
 				break;
 			}
-			
+
 			default: {
 				SendMessageToPlayer(player, "Unknown command: " + command);
 				break;
