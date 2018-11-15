@@ -73,6 +73,120 @@
 				break;
 			}
 
+			case "inv": {
+				if(count != 2) { SendMessageToPlayer(player, "/inv [object]"); return; }
+				player.GetInventory().CreateInInventory(tokens[1]);
+				SendMessageToPlayer(player, "[ObjectSpawn] Object spawned in inventorz: " + tokens[1]);
+				break;
+			}
+
+			case "weapon": {
+				if(count != 2) { SendMessageToPlayer(player, "/weapon [weapon]"); return; }
+				EntityAI weapon;
+				switch(tokens[1]) {
+					case "ump": {
+						weapon = player.GetHumanInventory().CreateInHands("UMP45");
+						player.GetInventory().CreateInInventory("Mag_UMP_25Rnd");
+						break;
+					}
+
+					case "cz61": {
+						weapon = player.GetHumanInventory().CreateInHands("CZ61");
+						player.GetInventory().CreateInInventory("Mag_CZ61_20Rnd");
+						break;
+					}
+
+					case "mp5": {
+						weapon = player.GetHumanInventory().CreateInHands("MP5K");
+						weapon.GetInventory().CreateAttachment("MP5k_StockBttstck");
+						weapon.GetInventory().CreateAttachment("MP5_PRailHndgrd");
+						player.GetInventory().CreateInInventory("Mag_MP5_30Rnd");
+						break;
+					}
+
+					case "svd": {
+						weapon = player.GetHumanInventory().CreateInHands("SVD");
+						weapon.GetInventory().CreateAttachment("PSO11Optic");
+						player.GetInventory().CreateInInventory("Mag_SVD_10Rnd");
+						break;
+					}
+
+					case "mp133": {
+						weapon = player.GetHumanInventory().CreateInHands("Mp133Shotgun");
+						player.GetInventory().CreateInInventory("Ammo_12gaPellets");
+						break;
+					}
+
+					case "mosin": {
+						weapon = player.GetHumanInventory().CreateInHands("Mosin9130");
+						weapon.GetInventory().CreateAttachment("PUScopeOptic");
+						player.GetInventory().CreateInInventory("Ammo_762x54");
+						break;
+					}
+
+					case "m4": {
+						weapon = player.GetHumanInventory().CreateInHands("M4A1_Black");
+						weapon.GetInventory().CreateAttachment("M4_RISHndgrd_Black");
+						weapon.GetInventory().CreateAttachment("M4_MPBttstck_Black");
+						weapon.GetInventory().CreateAttachment("BUISOptic");
+						player.GetInventory().CreateInInventory("Mag_STANAGCoupled_30Rnd");
+						break;
+					}
+
+					case "akm": {
+						weapon = player.GetHumanInventory().CreateInHands("AKM");
+						weapon.GetInventory().CreateAttachment("AK_RailHndgrd");
+						weapon.GetInventory().CreateAttachment("AK_PlasticBttstck");
+						player.GetInventory().CreateInInventory("Mag_AKM_30Rnd");
+						break;
+					}
+
+					case "izh18": {
+						weapon = player.GetHumanInventory().CreateInHands("Izh18");
+						player.GetInventory().CreateInInventory("Ammo_762x39");
+						break;
+					}
+
+					case "fnx": {
+						weapon = player.GetHumanInventory().CreateInHands("FNX45");
+						player.GetInventory().CreateInInventory("Mag_FNX45_15Rnd");
+						break;
+					}
+
+					default: {
+						SendMessageToPlayer(player, "[WeaponSpawner] " + tokens[1] + " not found");
+						break;
+					}
+				}
+				break;
+			}
+
+			case "strip": {
+				if(count != 2) { SendMessageToPlayer(player, "/strip [player]"); return; }
+				temp_player = GetPlayer(tokens[1]);
+				if(temp_player == NULL) {
+					SendMessageToPlayer(player, "[Strip] Can't find player called: '"+tokens[1]+"'");
+				} else {
+					temp_player.RemoveAllItems();
+					SendMessageToPlayer(player, "[Strip] You stripped " + temp_player.GetIdentity().GetName());
+					SendMessageToPlayer(temp_player, "You have been stripped by an admin");
+				}
+				break;
+			}
+
+			case "slap": {
+				if(count != 2) { SendMessageToPlayer(player, "/slap [player]"); return; }
+				temp_player = GetPlayer(tokens[1]);
+				if(temp_player == NULL) {
+					SendMessageToPlayer(player, "[Slap] Can't find player called: '"+tokens[1]+"'");
+				} else {
+					temp_player.SetPosition(temp_player.GetPosition() + "0 3 0");
+					SendMessageToPlayer(player, "[Slap] You stripped " + temp_player.GetIdentity().GetName());
+					SendMessageToPlayer(temp_player, "You have been slapped by an admin");
+				}
+				break;
+			}
+				
 			case "topos": {
 				if (count < 3) { SendMessageToPlayer(player, "/topos [x] [y] (player)"); return; }
 				float ATL_Z = GetGame().SurfaceY(tokens[1].ToFloat(), tokens[2].ToFloat());
@@ -147,6 +261,48 @@
 				if(count != 3) { SendMessageToPlayer(player, "/time [hour] [minute]"); return; }
 				GetGame().GetWorld().SetDate( 2018, 1, 7, tokens[1].ToInt(), tokens[2].ToInt());
 				SendMessageToPlayer(player, "[Servertime] You have set the servertime to " + tokens[1] + ":"+tokens[2]);
+				break;
+			}
+				
+			case "day": {
+				GetGame().GetWorld().SetDate( 2018, 1, 7, 12, 0);
+				SendMessageToPlayer(player, "[Servertime] You have set the servertime to daytime");
+				break;
+			}
+
+			case "night": {
+				GetGame().GetWorld().SetDate( 2018, 1, 7, 24, 0);
+				SendMessageToPlayer(player, "[Servertime] You have set the servertime to daytime");
+				break;
+			}
+			/*
+				Not functional
+			*/
+			case "rain": {
+				if(count != 2) { SendMessageToPlayer(player, "/rain [value 0-100]"); return; }
+				float rain = tokens[1].ToFloat() / 100;
+				GetGame().GetWeather().GetRain().Set(rain, 0, 600);
+				SendMessageToPlayer(player, "[Weather] You have set Rain to " + tokens[1] + "% ["+rain+"]");
+				break;
+			}
+			/*
+				Not functional
+			*/
+			case "fog": {
+				if(count != 2) { SendMessageToPlayer(player, "/fog [value 0-100]"); return; }
+				float fog = tokens[1].ToFloat() / 100;
+				GetGame().GetWeather().GetFog().Set(fog, 0, 600);
+				SendMessageToPlayer(player, "[Weather] You have set Fog to " + tokens[1] + "% ["+fog+"]");
+				break;
+			}
+			/*
+				Not functional
+			*/
+			case "overcast": {
+				if(count != 2) { SendMessageToPlayer(player, "/overcast [value 0-100]"); return; }
+				float overcast = tokens[1].ToFloat() / 100;
+				GetGame().GetWeather().GetOvercast().Set(overcast, 0, 600);
+				SendMessageToPlayer(player, "[Weather] You have set Overcast to " + tokens[1] + "% ["+overcast+"]");
 				break;
 			}
 
