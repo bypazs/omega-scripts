@@ -275,33 +275,27 @@
 				SendMessageToPlayer(player, "[Servertime] You have set the servertime to daytime");
 				break;
 			}
-			/*
-				Not functional
-			*/
+
 			case "rain": {
 				if(count != 2) { SendMessageToPlayer(player, "/rain [value 0-100]"); return; }
 				float rain = tokens[1].ToFloat() / 100;
-				GetGame().GetWeather().GetRain().Set(rain, 0, 600);
+				GetGame().GetWeather().GetRain().Set(rain, 2, 600);
 				SendMessageToPlayer(player, "[Weather] You have set Rain to " + tokens[1] + "% ["+rain+"]");
 				break;
 			}
-			/*
-				Not functional
-			*/
+
 			case "fog": {
 				if(count != 2) { SendMessageToPlayer(player, "/fog [value 0-100]"); return; }
 				float fog = tokens[1].ToFloat() / 100;
-				GetGame().GetWeather().GetFog().Set(fog, 0, 600);
+				GetGame().GetWeather().GetFog().Set(fog, 2, 600);
 				SendMessageToPlayer(player, "[Weather] You have set Fog to " + tokens[1] + "% ["+fog+"]");
 				break;
 			}
-			/*
-				Not functional
-			*/
+
 			case "overcast": {
 				if(count != 2) { SendMessageToPlayer(player, "/overcast [value 0-100]"); return; }
 				float overcast = tokens[1].ToFloat() / 100;
-				GetGame().GetWeather().GetOvercast().Set(overcast, 0, 600);
+				GetGame().GetWeather().GetOvercast().Set(overcast, 2, 600);
 				SendMessageToPlayer(player, "[Weather] You have set Overcast to " + tokens[1] + "% ["+overcast+"]");
 				break;
 			}
