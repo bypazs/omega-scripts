@@ -200,7 +200,7 @@ class BetterAirdrop {
     void Drop() {
         motionless_ticks = 0;
         GetGame().AdminLog("<BetterAirdrop> initiated drop physics");
-        airdrop_physics = EntityAI.Cast(GetGame().CreateObject( "CivilianSedan", plane.GetPosition(), true, true ));
+        airdrop_physics = EntityAI.Cast(GetGame().CreateObject( "OffroadHatchback", plane.GetPosition(), true, true ));
         airdrop_physics.SetAllowDamage(false);
         airdrop_obj = GetGame().CreateObject( "Land_Container_1Bo", plane.GetPosition(), false, true );
         SetVelocity(airdrop_physics, "10 0 0");
