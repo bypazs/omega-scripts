@@ -2,7 +2,8 @@
     Place in init.c -> CustomMission
   */
   
-  	bool verify_admins = false; // true=verify presence of BI UID in admin list
+  	bool freecam_active = false;
+	bool verify_admins = false; // true=verify presence of BI UID in admin list
 	string cmd_prefix = "/"; // Must be special character
 	ref TStringArray admins = {}; // Add your BI UID or SteamID
 
@@ -40,30 +41,28 @@
 	}
 
 	override void OnEvent(EventType eventTypeId, Param params)  {
-		super.OnEvent(eventTypeId,params);
 		int i;
 		PlayerBase player, temp_player;
 		array<Man> players = new array<Man>; GetGame().GetPlayers(players);
-		if(eventTypeId != ChatMessageEventTypeID) return; // Is chat message
+		if(eventTypeId != ChatMessageEventTypeID) { super.OnEvent(eventTypeId,params); return; }
 		ChatMessageEventParams chat_params = ChatMessageEventParams.Cast( params );
-		if(chat_params.param1 != 0 || chat_params.param2 == "") return; 
+		if(chat_params.param1 != 0 || chat_params.param2 == "") { super.OnEvent(eventTypeId,params); return; }
 		player = GetPlayer(chat_params.param2);
-		if(player == NULL) return;
-		if(verify_admins && !IsPlayerAnAdmin(player)) { GetGame().AdminLog("[ADMCMD] (Unauthorized) " + player.GetIdentity().GetName() +" ("+player.GetIdentity().GetPlainId()+", "+player.GetIdentity().GetId()+") tried to execute "+ chat_params.param3); return; }
+		if(player == NULL) { super.OnEvent(eventTypeId,params); return; }
 		string message = chat_params.param3, prefix, param0, command;
 		TStringArray tokens = new TStringArray;
-		message.Replace("` ", "&SPCESC!"); //Escape spaces before splitting
+		message.Replace("` ", "&SPCESC!");
 		message.Split(" ", tokens); int count = tokens.Count();
-
 		for ( i = 0; i < count; ++i ) {
 			message = tokens[i];
-			message.Replace("&SPCESC!", " "); //.Replace doesn't work directly on TStringArray elements for some reason :(
+			message.Replace("&SPCESC!", " ");
 			tokens[i] = message;
 		}
 
 		param0 = tokens.Get(0);
-		param0.ParseStringEx(prefix); if(prefix != cmd_prefix) return;
+		param0.ParseStringEx(prefix); if(prefix != cmd_prefix) { super.OnEvent(eventTypeId,params); return; };
 		param0.ParseStringEx(command);
+		if(verify_admins && !IsPlayerAnAdmin(player)) { GetGame().AdminLog("[ADMCMD] (Unauthorized) " + player.GetIdentity().GetName() +" ("+player.GetIdentity().GetPlainId()+", "+player.GetIdentity().GetId()+") tried to execute "+ chat_params.param3); return; }
 		GetGame().AdminLog("[ADMCMD] PLAYER: "+ player.GetIdentity().GetName() +" ("+player.GetIdentity().GetPlainId()+", "+player.GetIdentity().GetId()+") CMD: "+ command);
 		switch(command) {
 			case "spawn": {
@@ -76,7 +75,7 @@
 			case "inv": {
 				if(count != 2) { SendMessageToPlayer(player, "/inv [object]"); return; }
 				player.GetInventory().CreateInInventory(tokens[1]);
-				SendMessageToPlayer(player, "[ObjectSpawn] Object spawned in inventorz: " + tokens[1]);
+				SendMessageToPlayer(player, "[ObjectSpawn] Object spawned in inventory: " + tokens[1]);
 				break;
 			}
 
@@ -186,7 +185,7 @@
 				}
 				break;
 			}
-				
+
 			case "topos": {
 				if (count < 3) { SendMessageToPlayer(player, "/topos [x] [y] (player)"); return; }
 				float ATL_Z = GetGame().SurfaceY(tokens[1].ToFloat(), tokens[2].ToFloat());
@@ -263,7 +262,7 @@
 				SendMessageToPlayer(player, "[Servertime] You have set the servertime to " + tokens[1] + ":"+tokens[2]);
 				break;
 			}
-				
+
 			case "day": {
 				GetGame().GetWorld().SetDate( 2018, 1, 7, 12, 0);
 				SendMessageToPlayer(player, "[Servertime] You have set the servertime to daytime");
@@ -279,23 +278,23 @@
 			case "rain": {
 				if(count != 2) { SendMessageToPlayer(player, "/rain [value 0-100]"); return; }
 				float rain = tokens[1].ToFloat() / 100;
-				GetGame().GetWeather().GetRain().Set(rain, 2, 600);
+				GetGame().GetWeather().GetRain().Set(rain, 0, 600);
 				SendMessageToPlayer(player, "[Weather] You have set Rain to " + tokens[1] + "% ["+rain+"]");
 				break;
 			}
 
 			case "fog": {
-				if(count != 2) { SendMessageToPlayer(player, "/fog [value 0-100]"); return; }
+				if(count != 2) { SendMessageToPlayer(player, "/rain [value 0-100]"); return; }
 				float fog = tokens[1].ToFloat() / 100;
-				GetGame().GetWeather().GetFog().Set(fog, 2, 600);
+				GetGame().GetWeather().GetFog().Set(fog, 0, 600);
 				SendMessageToPlayer(player, "[Weather] You have set Fog to " + tokens[1] + "% ["+fog+"]");
 				break;
 			}
 
 			case "overcast": {
-				if(count != 2) { SendMessageToPlayer(player, "/overcast [value 0-100]"); return; }
+				if(count != 2) { SendMessageToPlayer(player, "/rain [value 0-100]"); return; }
 				float overcast = tokens[1].ToFloat() / 100;
-				GetGame().GetWeather().GetOvercast().Set(overcast, 2, 600);
+				GetGame().GetWeather().GetOvercast().Set(overcast, 0, 600);
 				SendMessageToPlayer(player, "[Weather] You have set Overcast to " + tokens[1] + "% ["+overcast+"]");
 				break;
 			}
@@ -347,6 +346,21 @@
 					heal_target.GetStatWater().Set(1000);
 				}
 				break;
+			}
+
+			case "freecam": {
+				PlayerBase body = player;
+				if(freecam_active) {
+					freecam_active = false;
+					GetGame().SelectPlayer(player.GetIdentity(), body);
+					SendMessageToPlayer(player, "[Freecam] Exited");
+
+				} else {
+					freecam_active = true;
+					GetGame().SelectPlayer(player.GetIdentity(), NULL);
+					GetGame().SelectSpectator(player.GetIdentity(), "freedebugcamera", player.GetPosition());	
+					SendMessageToPlayer(player, "[Freecam] Entered");
+				}
 			}
 
 			case "offroad": {
