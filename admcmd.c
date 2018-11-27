@@ -361,6 +361,7 @@
 					GetGame().SelectSpectator(player.GetIdentity(), "freedebugcamera", player.GetPosition());	
 					SendMessageToPlayer(player, "[Freecam] Entered");
 				}
+				break;
 			}
 
 			case "offroad": {
