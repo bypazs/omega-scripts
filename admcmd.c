@@ -159,6 +159,58 @@
 				}
 				break;
 			}
+				
+			case "tp": {
+				if(count != 2) { SendMessageToPlayer(player, "/tp [POI]"); return; }
+				vector poi;
+				switch(tokens[1]) {
+					case "nwaf": {
+						poi = "4660 0 10330";
+						SendMessageToPlayer(player, "[POI-TP] Teleported to NWAF");
+						break;
+					}
+
+					case "nwaf_tents": {
+						poi = "3160 0 11000";
+						SendMessageToPlayer(player, "[POI-TP] Teleported to NWAF-Tents");
+						break;
+					}
+
+					case "tisy": {
+						poi = "1600 0 14000";
+						SendMessageToPlayer(player, "[POI-TP] Teleported to Tisy");
+						break;
+					}
+
+					case "vmc": {
+						poi = "4600 0 8200";
+						SendMessageToPlayer(player, "[POI-TP] Teleported to Vybor Military Compound");
+						break;
+					}
+
+					case "pmc": {
+						poi = "1830 0 3450";
+						SendMessageToPlayer(player, "[POI-TP] Teleported to Pavlovo Military Compound");
+						break;
+					}
+
+					case "tmc": {
+						poi = "7850 0 14700";
+						SendMessageToPlayer(player, "[POI-TP] Teleported to Troitskoe Military Compound");
+						break;
+					}
+
+					default: {
+						SendMessageToPlayer(player, "[POI-TP] " + tokens[1] + " not found");
+						SendMessageToPlayer(player, "Available POI: ");
+						return;
+					}
+				}
+
+				poi[1] = GetGame().SurfaceY(poi[0], poi[2]);
+				player.SetPosition(poi);
+				break;
+			}
 
 			case "strip": {
 				if(count != 2) { SendMessageToPlayer(player, "/strip [player]"); return; }
@@ -275,6 +327,7 @@
 				break;
 			}
 
+			/*
 			case "rain": {
 				if(count != 2) { SendMessageToPlayer(player, "/rain [value 0-100]"); return; }
 				float rain = tokens[1].ToFloat() / 100;
@@ -298,6 +351,7 @@
 				SendMessageToPlayer(player, "[Weather] You have set Overcast to " + tokens[1] + "% ["+overcast+"]");
 				break;
 			}
+			*/
 
 			case "kill": {
 				if(count == 2) {
