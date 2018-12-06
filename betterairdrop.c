@@ -102,6 +102,10 @@ class BetterAirdrop {
 
     void Cleanup() {
         GetGame().ObjectDelete(airdrop_obj);
+	if(smoke_signal && smoke != NULL) {
+            smoke.SetPosition("0 0 0");
+            GetGame().ObjectDelete(smoke);
+        }
     }
 
     void ResetPlane() {
@@ -165,6 +169,11 @@ class BetterAirdrop {
             airdrop_obj.PlaceOnSurface();
             GetGame().AdminLog("<BetterAirdrop> hit surface");
             AfterDrop();
+	    if(smoke_signal) {
+                smoke = EntityAI.Cast(GetGame().CreateObject( "Roadflare", tmp_pos + "0 4 0"));
+                smoke.SetOrientation("0 0 0");
+                smoke.GetCompEM().SwitchOn(); 
+            }
         } else {
             vector airdrop_obj_pos;
             airdrop_obj_pos[0] = drop_pos[0];
