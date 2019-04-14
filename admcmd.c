@@ -438,6 +438,7 @@
 				v.GetInventory().CreateAttachment("HatchbackWheel"); // spare
                			v.GetInventory().CreateAttachment("HeadlightH7"); // add disappear item
                 		v.GetInventory().CreateAttachment("CarRadiator"); // add disappear item
+				v.GetInventory().CreateAttachment("HatchbackDoors_Driver"); // add disappear item
 				break;
 			}
 
