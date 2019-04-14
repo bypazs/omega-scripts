@@ -441,6 +441,32 @@
 				v.GetInventory().CreateAttachment("HatchbackDoors_Driver"); // add disappear item
 				break;
 			}
+				
+			case "sedan": {
+				SendMessageToPlayer(player, "[sedan] Vehicled spawned");
+				Car v2;
+				float playerAngle2 = MiscGameplayFunctions.GetHeadingAngle(player);
+				vector posModifier2 = Vector(-(3 * Math.Sin(playerAngle2)), 0, 3 * Math.Cos(playerAngle2));
+				v2 = Car.Cast(GetGame().CreateObject( "CivilianSedan", player.GetPosition() + posModifier2));
+				
+				v2.GetInventory().CreateAttachment("SparkPlug");
+				v2.GetInventory().CreateAttachment("EngineBelt");
+				v2.GetInventory().CreateAttachment("CarBattery");
+				v2.GetInventory().CreateAttachment("CivSedanHood");
+				v2.GetInventory().CreateAttachment("CivSedanTrunk");
+				v2.GetInventory().CreateAttachment("CivSedanDoors_BackRight"); //back right
+				v2.GetInventory().CreateAttachment("CivSedanDoors_BackLeft"); //back left
+				v2.GetInventory().CreateAttachment("CivSedanDoors_CoDriver"); //right
+				v2.GetInventory().CreateAttachment("CivSedanDoors_Driver"); //left
+				v2.GetInventory().CreateAttachment("CivSedanWheel");
+				v2.GetInventory().CreateAttachment("CivSedanWheel");
+				v2.GetInventory().CreateAttachment("CivSedanWheel");
+				v2.GetInventory().CreateAttachment("CivSedanWheel");
+				v2.GetInventory().CreateAttachment("CivSedanWheel"); // spare
+				v2.GetInventory().CreateAttachment("HeadlightH7");
+				v2.GetInventory().CreateAttachment("CarRadiator");
+				break;
+			}
 
 			case "refuel": {
 				ref array<Object> nearest_objects = new array<Object>;
