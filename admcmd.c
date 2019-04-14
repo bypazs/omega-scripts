@@ -86,11 +86,13 @@
 					case "ump": {
 						weapon = player.GetHumanInventory().CreateInHands("UMP45");
 						player.GetInventory().CreateInInventory("Mag_UMP_25Rnd");
+						player.GetInventory().CreateInInventory("Mag_UMP_25Rnd");
 						break;
 					}
 
 					case "cz61": {
 						weapon = player.GetHumanInventory().CreateInHands("CZ61");
+						player.GetInventory().CreateInInventory("Mag_CZ61_20Rnd");
 						player.GetInventory().CreateInInventory("Mag_CZ61_20Rnd");
 						break;
 					}
@@ -100,6 +102,7 @@
 						weapon.GetInventory().CreateAttachment("MP5k_StockBttstck");
 						weapon.GetInventory().CreateAttachment("MP5_PRailHndgrd");
 						player.GetInventory().CreateInInventory("Mag_MP5_30Rnd");
+						player.GetInventory().CreateInInventory("Mag_MP5_30Rnd");
 						break;
 					}
 
@@ -107,11 +110,13 @@
 						weapon = player.GetHumanInventory().CreateInHands("SVD");
 						weapon.GetInventory().CreateAttachment("PSO11Optic");
 						player.GetInventory().CreateInInventory("Mag_SVD_10Rnd");
+						player.GetInventory().CreateInInventory("Mag_SVD_10Rnd");
 						break;
 					}
 
 					case "mp133": {
 						weapon = player.GetHumanInventory().CreateInHands("Mp133Shotgun");
+						player.GetInventory().CreateInInventory("Ammo_12gaPellets");
 						player.GetInventory().CreateInInventory("Ammo_12gaPellets");
 						break;
 					}
@@ -119,6 +124,7 @@
 					case "mosin": {
 						weapon = player.GetHumanInventory().CreateInHands("Mosin9130");
 						weapon.GetInventory().CreateAttachment("PUScopeOptic");
+						player.GetInventory().CreateInInventory("Ammo_762x54");
 						player.GetInventory().CreateInInventory("Ammo_762x54");
 						break;
 					}
@@ -129,6 +135,7 @@
 						weapon.GetInventory().CreateAttachment("M4_MPBttstck_Black");
 						weapon.GetInventory().CreateAttachment("BUISOptic");
 						player.GetInventory().CreateInInventory("Mag_STANAGCoupled_30Rnd");
+						player.GetInventory().CreateInInventory("Mag_STANAGCoupled_30Rnd");
 						break;
 					}
 
@@ -137,11 +144,13 @@
 						weapon.GetInventory().CreateAttachment("AK_RailHndgrd");
 						weapon.GetInventory().CreateAttachment("AK_PlasticBttstck");
 						player.GetInventory().CreateInInventory("Mag_AKM_30Rnd");
+						player.GetInventory().CreateInInventory("Mag_AKM_30Rnd");
 						break;
 					}
 
 					case "izh18": {
 						weapon = player.GetHumanInventory().CreateInHands("Izh18");
+						player.GetInventory().CreateInInventory("Ammo_762x39");
 						player.GetInventory().CreateInInventory("Ammo_762x39");
 						break;
 					}
@@ -149,8 +158,18 @@
 					case "fnx": {
 						weapon = player.GetHumanInventory().CreateInHands("FNX45");
 						player.GetInventory().CreateInInventory("Mag_FNX45_15Rnd");
+						player.GetInventory().CreateInInventory("Mag_FNX45_15Rnd");
 						break;
 					}
+					
+					case "fal": {
+						weapon = player.GetHumanInventory().CreateInHands("FAL");
+						weapon.GetInventory().CreateAttachment("Fal_FoldingBttstck");
+						weapon.GetInventory().CreateAttachment("ACOGOptic");
+						player.GetInventory().CreateInInventory("Mag_FAL_20Rnd");
+						player.GetInventory().CreateInInventory("Mag_FAL_20Rnd");
+						break;
+					} //add new weapon
 
 					default: {
 						SendMessageToPlayer(player, "[WeaponSpawner] " + tokens[1] + " not found");
@@ -159,7 +178,7 @@
 				}
 				break;
 			}
-				
+					
 			case "tp": {
 				if(count != 2) { SendMessageToPlayer(player, "/tp [POI]"); return; }
 				vector poi;
@@ -436,35 +455,34 @@
 				v.GetInventory().CreateAttachment("HatchbackWheel");
 				v.GetInventory().CreateAttachment("HatchbackWheel");
 				v.GetInventory().CreateAttachment("HatchbackWheel"); // spare
-               			v.GetInventory().CreateAttachment("HeadlightH7"); // add disappear item
-                		v.GetInventory().CreateAttachment("CarRadiator"); // add disappear item
+				v.GetInventory().CreateAttachment("HeadlightH7"); // add disappear item
+				v.GetInventory().CreateAttachment("CarRadiator"); // add disappear item
 				v.GetInventory().CreateAttachment("HatchbackDoors_Driver"); // add disappear item
 				break;
 			}
-				
 			case "sedan": {
 				SendMessageToPlayer(player, "[sedan] Vehicled spawned");
-				Car v2;
-				float playerAngle2 = MiscGameplayFunctions.GetHeadingAngle(player);
-				vector posModifier2 = Vector(-(3 * Math.Sin(playerAngle2)), 0, 3 * Math.Cos(playerAngle2));
-				v2 = Car.Cast(GetGame().CreateObject( "CivilianSedan", player.GetPosition() + posModifier2));
+				Car v;
+				float playerAngle = MiscGameplayFunctions.GetHeadingAngle(player);
+				vector posModifier = Vector(-(3 * Math.Sin(playerAngle)), 0, 3 * Math.Cos(playerAngle));
+				v = Car.Cast(GetGame().CreateObject( "CivilianSedan", player.GetPosition() + posModifier));
 				
-				v2.GetInventory().CreateAttachment("SparkPlug");
-				v2.GetInventory().CreateAttachment("EngineBelt");
-				v2.GetInventory().CreateAttachment("CarBattery");
-				v2.GetInventory().CreateAttachment("CivSedanHood");
-				v2.GetInventory().CreateAttachment("CivSedanTrunk");
-				v2.GetInventory().CreateAttachment("CivSedanDoors_BackRight"); //back right
-				v2.GetInventory().CreateAttachment("CivSedanDoors_BackLeft"); //back left
-				v2.GetInventory().CreateAttachment("CivSedanDoors_CoDriver"); //right
-				v2.GetInventory().CreateAttachment("CivSedanDoors_Driver"); //left
-				v2.GetInventory().CreateAttachment("CivSedanWheel");
-				v2.GetInventory().CreateAttachment("CivSedanWheel");
-				v2.GetInventory().CreateAttachment("CivSedanWheel");
-				v2.GetInventory().CreateAttachment("CivSedanWheel");
-				v2.GetInventory().CreateAttachment("CivSedanWheel"); // spare
-				v2.GetInventory().CreateAttachment("HeadlightH7");
-				v2.GetInventory().CreateAttachment("CarRadiator");
+				v.GetInventory().CreateAttachment("SparkPlug");
+				v.GetInventory().CreateAttachment("EngineBelt");
+				v.GetInventory().CreateAttachment("CarBattery");
+				v.GetInventory().CreateAttachment("CivSedanHood");
+				v.GetInventory().CreateAttachment("CivSedanTrunk");
+				v.GetInventory().CreateAttachment("CivSedanDoors_BackRight"); //back right
+				v.GetInventory().CreateAttachment("CivSedanDoors_BackLeft"); //back left
+				v.GetInventory().CreateAttachment("CivSedanDoors_CoDriver"); //right
+				v.GetInventory().CreateAttachment("CivSedanDoors_Driver"); //left
+				v.GetInventory().CreateAttachment("CivSedanWheel");
+				v.GetInventory().CreateAttachment("CivSedanWheel");
+				v.GetInventory().CreateAttachment("CivSedanWheel");
+				v.GetInventory().CreateAttachment("CivSedanWheel");
+				v.GetInventory().CreateAttachment("CivSedanWheel"); // spare
+				v.GetInventory().CreateAttachment("HeadlightH7");
+				v.GetInventory().CreateAttachment("CarRadiator");
 				break;
 			}
 
