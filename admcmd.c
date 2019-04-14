@@ -5,7 +5,7 @@
   	bool freecam_active = false;
 	bool verify_admins = false; // true=verify presence of BI UID in admin list
 	string cmd_prefix = "/"; // Must be special character
-	ref TStringArray admins = {}; // Add your BI UID or SteamID
+	ref TStringArray admins = {"76561198085018639"}; // Add your BI UID or SteamID
 
 	bool IsPlayerAnAdmin(PlayerBase player) {
 		bool found = false;
@@ -178,7 +178,7 @@
 				}
 				break;
 			}
-					
+				
 			case "tp": {
 				if(count != 2) { SendMessageToPlayer(player, "/tp [POI]"); return; }
 				vector poi;
@@ -455,34 +455,35 @@
 				v.GetInventory().CreateAttachment("HatchbackWheel");
 				v.GetInventory().CreateAttachment("HatchbackWheel");
 				v.GetInventory().CreateAttachment("HatchbackWheel"); // spare
-				v.GetInventory().CreateAttachment("HeadlightH7"); // add disappear item
-				v.GetInventory().CreateAttachment("CarRadiator"); // add disappear item
+               	v.GetInventory().CreateAttachment("HeadlightH7"); // add disappear item
+                v.GetInventory().CreateAttachment("CarRadiator"); // add disappear item
 				v.GetInventory().CreateAttachment("HatchbackDoors_Driver"); // add disappear item
 				break;
 			}
+			
 			case "sedan": {
 				SendMessageToPlayer(player, "[sedan] Vehicled spawned");
-				Car v;
-				float playerAngle = MiscGameplayFunctions.GetHeadingAngle(player);
-				vector posModifier = Vector(-(3 * Math.Sin(playerAngle)), 0, 3 * Math.Cos(playerAngle));
-				v = Car.Cast(GetGame().CreateObject( "CivilianSedan", player.GetPosition() + posModifier));
+				Car v2;
+				float playerAngle2 = MiscGameplayFunctions.GetHeadingAngle(player);
+				vector posModifier2 = Vector(-(3 * Math.Sin(playerAngle2)), 0, 3 * Math.Cos(playerAngle2));
+				v2 = Car.Cast(GetGame().CreateObject( "CivilianSedan", player.GetPosition() + posModifier2));
 				
-				v.GetInventory().CreateAttachment("SparkPlug");
-				v.GetInventory().CreateAttachment("EngineBelt");
-				v.GetInventory().CreateAttachment("CarBattery");
-				v.GetInventory().CreateAttachment("CivSedanHood");
-				v.GetInventory().CreateAttachment("CivSedanTrunk");
-				v.GetInventory().CreateAttachment("CivSedanDoors_BackRight"); //back right
-				v.GetInventory().CreateAttachment("CivSedanDoors_BackLeft"); //back left
-				v.GetInventory().CreateAttachment("CivSedanDoors_CoDriver"); //right
-				v.GetInventory().CreateAttachment("CivSedanDoors_Driver"); //left
-				v.GetInventory().CreateAttachment("CivSedanWheel");
-				v.GetInventory().CreateAttachment("CivSedanWheel");
-				v.GetInventory().CreateAttachment("CivSedanWheel");
-				v.GetInventory().CreateAttachment("CivSedanWheel");
-				v.GetInventory().CreateAttachment("CivSedanWheel"); // spare
-				v.GetInventory().CreateAttachment("HeadlightH7");
-				v.GetInventory().CreateAttachment("CarRadiator");
+				v2.GetInventory().CreateAttachment("SparkPlug");
+				v2.GetInventory().CreateAttachment("EngineBelt");
+				v2.GetInventory().CreateAttachment("CarBattery");
+				v2.GetInventory().CreateAttachment("CivSedanHood");
+				v2.GetInventory().CreateAttachment("CivSedanTrunk");
+				v2.GetInventory().CreateAttachment("CivSedanDoors_BackRight"); //back right
+				v2.GetInventory().CreateAttachment("CivSedanDoors_BackLeft"); //back left
+				v2.GetInventory().CreateAttachment("CivSedanDoors_CoDriver"); //right
+				v2.GetInventory().CreateAttachment("CivSedanDoors_Driver"); //left
+				v2.GetInventory().CreateAttachment("CivSedanWheel");
+				v2.GetInventory().CreateAttachment("CivSedanWheel");
+				v2.GetInventory().CreateAttachment("CivSedanWheel");
+				v2.GetInventory().CreateAttachment("CivSedanWheel");
+				v2.GetInventory().CreateAttachment("CivSedanWheel"); // spare
+				v2.GetInventory().CreateAttachment("HeadlightH7");
+				v2.GetInventory().CreateAttachment("CarRadiator");
 				break;
 			}
 
